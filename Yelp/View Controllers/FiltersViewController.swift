@@ -107,15 +107,7 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
         
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 1:
-            if indexPath.row == 0{
-            
             }
-        default:
-            <#code#>
-        }
-    }
     func filterCell(filterCell: FiltersCell, didValueChange value: Bool) {
         let ip = tableView.indexPath(for: filterCell)
         stateSwitch[(ip?.row)!] = value
