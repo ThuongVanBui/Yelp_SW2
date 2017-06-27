@@ -65,9 +65,10 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
                 filters.append(catagories[row]["code"]!)
             }
         }
-        if selectDistance != "Auto"
+        if selectDistance == selectDistance
         {
-        delegate.filtersViewController(filterVC: self, didUpdateFilters: filters, Deal: deal,Distance: selectDistance)
+            delegate.filtersViewController(filterVC: self, didUpdateFilters: filters, Deal: deal,Distance: selectDistance)
+
         }
         
     }
