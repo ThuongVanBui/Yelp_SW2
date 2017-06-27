@@ -8,7 +8,7 @@
 
 import UIKit
 protocol FiltersViewControllerDelegate{
-    func filtersViewController (filterVC: FiltersViewController, didUpdateFilters filters:[String], Deal:Bool)
+    func filtersViewController (filterVC: FiltersViewController, didUpdateFilters filters:[String], Deal:Bool, Distance:String)
 }
 class FiltersViewController: UIViewController {
 
@@ -21,7 +21,10 @@ class FiltersViewController: UIViewController {
     var stateSwitch =  [Int:Bool]()
     var delegate:FiltersViewControllerDelegate!
     var deal = false
-    
+    var test = false
+    var nameImg = ""
+    var selectDistance = "Auto"
+    var cell:DistanceCell! = nil
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,7 +65,10 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
                 filters.append(catagories[row]["code"]!)
             }
         }
-        delegate.filtersViewController(filterVC: self, didUpdateFilters: filters, Deal: deal)
+        if selectDistance != "Auto"
+        {
+        delegate.filtersViewController(filterVC: self, didUpdateFilters: filters, Deal: deal,Distance: selectDistance)
+        }
         
     }
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -88,11 +94,11 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
             cell.delegate = self
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell", for: indexPath) as! DistanceCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell", for: indexPath) as! DistanceCell
             if Distance.count != 1 {
                 cell.checkImage.image = UIImage(named: "")
             } else {
-                cell.checkImage.image = UIImage(named: "Arrows-Down-4-icon-2.png")
+                cell.checkImage.image = UIImage(named: "Ok-icon.png")
             }
             cell.distanceLabel.text = Distance[indexPath.row]
             return cell
@@ -107,6 +113,34 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
         
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            break
+        case 1:
+            if indexPath.row == 0{
+                if test == false{
+                    Distance = ["Auto", "0.01 mi", "0.02 mi", "0.03 mi", "0.05 mi"]
+                    cell.checkImage.image = UIImage(named: "")
+                    tableView.reloadData()
+                    test = true
+                }
+                else if test == true{
+                    Distance = [Distance[indexPath.row]]
+                    tableView.reloadData()
+                    test = false
+                }
+            }else{
+                selectDistance = Distance[indexPath.row]
+                cell.distanceLabel.text = selectDistance
+                Distance = [Distance[indexPath.row]]
+                
+                tableView.reloadData()
+                test = false
+            }
+        default:
+            break
+        }
+        
             }
     func filterCell(filterCell: FiltersCell, didValueChange value: Bool) {
         let ip = tableView.indexPath(for: filterCell)

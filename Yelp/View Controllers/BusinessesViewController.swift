@@ -70,14 +70,30 @@ extension BusinessesViewController: UITableViewDelegate, UITableViewDataSource, 
         return cell
     }
     
-    func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String],Deal: Bool) {
+    func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String],Deal: Bool,Distance: String) {
         print(filters)
         Business.search(with: "", sort: nil, categories: filters, deals: Deal) { (businesses: [Business]?, error: Error?) in
-            if let businesses = businesses {
+            if Distance == "Auto" {
                 self.businesses = businesses
-                self.tableView.reloadData()
+            }else
+            {
+                self.businesses.removeAll()
+                var i = 0
+                for business in businesses!
+                {
+                if business.distance == Distance
+                    {
+                        self.businesses.insert(business, at: i)
+                        i+=1
+                    }
+                }
+                
+            
             }
+            self.tableView.reloadData()
+
             print(Deal)
+            print(Distance)
     }
     
     }
