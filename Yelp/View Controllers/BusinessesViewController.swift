@@ -70,9 +70,9 @@ extension BusinessesViewController: UITableViewDelegate, UITableViewDataSource, 
         return cell
     }
     
-    func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String],Deal: Bool,Distance: String) {
+    func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String],Deal: Bool,Distance: String, Sort: YelpSortMode) {
         print(filters)
-        Business.search(with: "", sort: nil, categories: filters, deals: Deal) { (businesses: [Business]?, error: Error?) in
+        Business.search(with: "", sort: Sort, categories: filters, deals: Deal) { (businesses: [Business]?, error: Error?) in
             if Distance == "Auto" {
                 self.businesses = businesses
             }else

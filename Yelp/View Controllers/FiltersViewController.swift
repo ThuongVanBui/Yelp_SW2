@@ -8,7 +8,7 @@
 
 import UIKit
 protocol FiltersViewControllerDelegate{
-    func filtersViewController (filterVC: FiltersViewController, didUpdateFilters filters:[String], Deal:Bool, Distance:String)
+    func filtersViewController (filterVC: FiltersViewController, didUpdateFilters filters:[String], Deal:Bool, Distance:String, Sort: YelpSortMode)
 }
 class FiltersViewController: UIViewController {
 
@@ -17,6 +17,7 @@ class FiltersViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var Distance = ["Auto"]
+    var Sort = ["Best Match"]
     var catagories: [[String:String]]!
     var stateSwitch =  [Int:Bool]()
     var delegate:FiltersViewControllerDelegate!
@@ -24,6 +25,7 @@ class FiltersViewController: UIViewController {
     var test = false
     var nameImg = ""
     var selectDistance = "Auto"
+    var selectSort = YelpSortMode(rawValue: 0)
     var cell:DistanceCell! = nil
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,15 +67,15 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
                 filters.append(catagories[row]["code"]!)
             }
         }
-        if selectDistance == selectDistance
+        if selectDistance == selectDistance && selectSort == selectSort
         {
-            delegate.filtersViewController(filterVC: self, didUpdateFilters: filters, Deal: deal,Distance: selectDistance)
+            delegate.filtersViewController(filterVC: self, didUpdateFilters: filters, Deal: deal,Distance: selectDistance, Sort: selectSort!)
 
         }
         
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -81,6 +83,8 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
         case 1:
             return Distance.count
         case 2:
+            return Sort.count
+        case 3:
             return catagories.count
         default:
             return 1
@@ -103,6 +107,17 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
             }
             cell.distanceLabel.text = Distance[indexPath.row]
             return cell
+        case 2:
+            cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell", for: indexPath) as! DistanceCell
+            if Sort.count != 1 {
+                cell.checkImage.image = UIImage(named: "")
+            } else {
+                cell.checkImage.image = UIImage(named: "Ok-icon.png")
+            }
+            cell.distanceLabel.text = Sort[indexPath.row]
+            return cell
+
+            
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "filtersCell", for: indexPath) as! FiltersCell
             cell.namecatagoryLabel.text = catagories[indexPath.row]["name"]
@@ -138,6 +153,28 @@ extension FiltersViewController:UITableViewDelegate, UITableViewDataSource, Filt
                 tableView.reloadData()
                 test = false
             }
+            case 2:
+                if indexPath.row == 0{
+                    if test == false{
+                        Sort = ["Best Match", "Distance", "Highest Rated"]
+                        cell.checkImage.image = UIImage(named: "")
+                        tableView.reloadData()
+                        test = true
+                    }
+                    else if test == true{
+                        Sort = [Sort[indexPath.row]]
+                        tableView.reloadData()
+                        test = false
+                    }
+                }else{
+                    selectSort = YelpSortMode(rawValue: indexPath.row)
+                    cell.distanceLabel.text = Sort[indexPath.row]
+                    Sort = [Sort[indexPath.row]]
+                    
+                    tableView.reloadData()
+                    test = false
+            }
+
         default:
             break
         }
